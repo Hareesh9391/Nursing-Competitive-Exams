@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>NursingPreparation</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body { margin:0; font-family: Arial; background:#f4f7fb; }
+.navbar { background:#0d47a1; color:white; padding:15px; display:flex; justify-content:space-between; }
+.nav-links a { color:white; margin-left:15px; text-decoration:none; }
+section { background:white; margin:20px; padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+button { padding:8px; background:#0d47a1; color:white; border:none; border-radius:5px; }
+.subject-btns { text-align:center; }
+.subject-btns button { margin:5px; }
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+  <div>🩺 NursingPreparation</div>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Subjects</a>
+    <a href="#">Resources</a>
+  </div>
+</div>
+
+<h1 style="text-align:center;">📚 Nursing Preparation Dashboard</h1>
+
+<div class="subject-btns">
+  <button onclick="showSection('med')">Medical</button>
+  <button onclick="showSection('peds')">Pediatrics</button>
+  <button onclick="showSection('obs')">Obstetrics</button>
+  <button onclick="showSection('mental')">Mental</button>
+</div>
+
+<section id="med" class="subject-section">
+<h2>🩺 Medical Surgical</h2>
+
+<h3>🎥 Videos</h3>
+<iframe width="300" src="https://www.youtube.com/embed/6QFaSO2-GCU"></iframe>
+
+<h3>📄 PDF</h3>
+<iframe src="nursing.pdf" width="100%" height="300"></iframe>
+
+<h3>🧪 Practice</h3>
+<a href="https://testbook.com/home" target="_blank">
+<button>Testbook Practice</button>
+</a>
+
+<a href="https://testbook.com/aiims-nursing-officer" target="_blank">
+<button style="background:#ff9800;">AIIMS Nursing Officer 🔥</button>
+</a>
+</section>
+
+<section id="peds" class="subject-section" style="display:none;">
+<h2>👶 Pediatrics</h2>
+<p>Add your content</p>
+</section>
+
+<section id="obs" class="subject-section" style="display:none;">
+<h2>🤰 Obstetrics</h2>
+<p>Add your content</p>
+</section>
+
+<section id="mental" class="subject-section" style="display:none;">
+<h2>🧠 Mental Health</h2>
+<p>Add your content</p>
+</section>
+
+<section>
+<h2>📊 Study Tracker</h2>
+<input id="subject" placeholder="Subject">
+<input id="hours" type="number" placeholder="Hours">
+<button onclick="addStudy()">Add</button>
+
+<table id="studyTable">
+<tr><th>Subject</th><th>Hours</th></tr>
+</table>
+</section>
+
+<section>
+<h2>📅 Daily Planner</h2>
+<input id="task" placeholder="Task">
+<button onclick="addTask()">Add</button>
+<ul id="taskList"></ul>
+</section>
+
+<section>
+<h2>🧠 Topics</h2>
+<input id="topic" placeholder="Topic">
+<button onclick="addTopic()">Add</button>
+<ul id="topicList"></ul>
+</section>
+
+<section>
+<h2>📝 Notes</h2>
+<textarea id="notes"></textarea><br>
+<button onclick="saveNotes()">Save</button>
+</section>
+
+<section>
+<h2>📊 Progress</h2>
+<canvas id="chart"></canvas>
+</section>
+
+<footer style="text-align:center; padding:10px; background:#0d47a1; color:white;">
+© 2026 NursingPreparation
+</footer>
+
+<script>
+function showSection(id){
+  document.querySelectorAll(".subject-section").forEach(s=>s.style.display="none");
+  document.getElementById(id).style.display="block";
+}
+
+let studyData = JSON.parse(localStorage.getItem("studyData")) || [];
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let topics = JSON.parse(localStorage.getItem("topics")) || [];
+document.getElementById("notes").value = localStorage.getItem("notes") || "";
+
+function addStudy(){
+  studyData.push({subject:subject.value, hours:hours.value});
+  localStorage.setItem("studyData",JSON.stringify(studyData));
+  renderStudy(); updateChart();
+}
+
+function renderStudy(){
+  let table=document.getElementById("studyTable");
+  table.innerHTML="<tr><th>Subject</th><th>Hours</th></tr>";
+  studyData.forEach(s=>{
+    let row=table.insertRow();
+    row.insertCell(0).innerHTML=s.subject;
+    row.insertCell(1).innerHTML=s.hours;
+  });
+}
+
+function addTask(){
+  tasks.push(task.value);
+  localStorage.setItem("tasks",JSON.stringify(tasks));
+  renderTasks();
+}
+
+function renderTasks(){
+  taskList.innerHTML="";
+  tasks.forEach(t=>{
+    let li=document.createElement("li");
+    li.innerText=t;
+    taskList.appendChild(li);
+  });
+}
+
+function addTopic(){
+  topics.push(topic.value);
+  localStorage.setItem("topics",JSON.stringify(topics));
+  renderTopics();
+}
+
+function renderTopics(){
+  topicList.innerHTML="";
+  topics.forEach(t=>{
+    let li=document.createElement("li");
+    li.innerHTML=`<input type="checkbox"> ${t}`;
+    topicList.appendChild(li);
+  });
+}
+
+function saveNotes(){
+  localStorage.setItem("notes",notes.value);
+}
+
+let chart;
+function updateChart(){
+  let labels=studyData.map(s=>s.subject);
+  let data=studyData.map(s=>s.hours);
+
+  if(chart) chart.destroy();
+
+  chart=new Chart(document.getElementById("chart"),{
+    type:'bar',
+    data:{labels:labels,datasets:[{label:'Hours',data:data}]}
+  });
+}
+
+renderStudy(); renderTasks(); renderTopics(); updateChart();
+</script>
+
+</body>
+</html>
