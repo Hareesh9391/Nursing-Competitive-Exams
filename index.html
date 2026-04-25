@@ -2,188 +2,234 @@
 <html>
 <head>
 <title>NursingPreparation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-body { margin:0; font-family: Arial; background:#f4f7fb; }
-.navbar { background:#0d47a1; color:white; padding:15px; display:flex; justify-content:space-between; }
-.nav-links a { color:white; margin-left:15px; text-decoration:none; }
-section { background:white; margin:20px; padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
-button { padding:8px; background:#0d47a1; color:white; border:none; border-radius:5px; }
-.subject-btns { text-align:center; }
-.subject-btns button { margin:5px; }
+body { margin:0; font-family:Segoe UI; display:flex; background:#f5f7fb; }
+
+/* Sidebar */
+.sidebar {
+  width:220px;
+  background:#0d47a1;
+  color:white;
+  height:100vh;
+  padding:20px;
+  position:fixed;
+}
+.sidebar button {
+  width:100%;
+  margin:5px 0;
+  padding:10px;
+  border:none;
+  background:#1565c0;
+  color:white;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+/* Main */
+.main {
+  margin-left:240px;
+  padding:20px;
+  width:100%;
+}
+
+.card {
+  background:white;
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+button { margin:5px; padding:8px; border:none; border-radius:5px; cursor:pointer; }
 </style>
 </head>
 
 <body>
 
-<div class="navbar">
-  <div>🩺 NursingPreparation</div>
-  <div class="nav-links">
-    <a href="#">Home</a>
-    <a href="#">Subjects</a>
-    <a href="#">Resources</a>
-  </div>
+<div class="sidebar">
+<h2>🩺 NursingPrep</h2>
+<button onclick="show('plan')">Plan</button>
+<button onclick="show('progress')">Progress</button>
+<button onclick="show('mock')">Mock</button>
+<button onclick="show('videos')">Videos</button>
+<button onclick="show('pdf')">PDF</button>
+<button onclick="show('extra')">Advanced</button>
 </div>
 
-<h1 style="text-align:center;">📚 Nursing Preparation Dashboard</h1>
+<div class="main">
 
-<div class="subject-btns">
-  <button onclick="showSection('med')">Medical</button>
-  <button onclick="showSection('peds')">Pediatrics</button>
-  <button onclick="showSection('obs')">Obstetrics</button>
-  <button onclick="showSection('mental')">Mental</button>
+<div id="plan" class="section">
+<div class="card">
+<h2>⏰ 3-Hour Plan</h2>
+<p>2 hrs Study + 1 hr Mock</p>
+<ul>
+<li>Day1: Medical</li>
+<li>Day2: Fundamentals</li>
+<li>Day3: Pediatrics</li>
+<li>Day4: Obstetrics</li>
+<li>Day5: Mental</li>
+<li>Day6: Pharma</li>
+<li>Day7: Revision</li>
+</ul>
+</div>
 </div>
 
-<section id="med" class="subject-section">
-<h2>🩺 Medical Surgical</h2>
+<div id="progress" class="section" style="display:none;">
+<div class="card">
+<h2>📊 Subject Progress</h2>
+<div id="subjectProgress"></div>
+<p id="subPercent"></p>
+</div>
+</div>
 
-<h3>🎥 Videos</h3>
-<iframe width="300" src="https://www.youtube.com/embed/6QFaSO2-GCU"></iframe>
+<div id="mock" class="section" style="display:none;">
+<div class="card">
+<h2>🧪 Mock Test</h2>
+<button onclick="startMock()">Start</button>
+<p id="timer"></p>
+<div id="mockBox"></div>
+</div>
+</div>
 
-<h3>📄 PDF</h3>
-<iframe src="nursing.pdf" width="100%" height="300"></iframe>
+<div id="videos" class="section" style="display:none;">
+<div class="card">
+<h2>🎥 Add YouTube Videos</h2>
+<input id="videoInput" placeholder="Paste link">
+<button onclick="addVideo()">Add</button>
+<div id="videoList"></div>
+</div>
+</div>
 
-<h3>🧪 Practice</h3>
-<a href="https://testbook.com/home" target="_blank">
-<button>Testbook Practice</button>
-</a>
+<div id="pdf" class="section" style="display:none;">
+<div class="card">
+<h2>📄 PDF</h2>
+<a href="nursing.pdf" target="_blank"><button>Open PDF</button></a>
+</div>
+</div>
 
-<a href="https://testbook.com/aiims-nursing-officer" target="_blank">
-<button style="background:#ff9800;">AIIMS Nursing Officer 🔥</button>
-</a>
-</section>
+<div id="extra" class="section" style="display:none;">
+<div class="card">
+<h2>📅 Streak</h2>
+<p id="streak"></p>
+</div>
 
-<section id="peds" class="subject-section" style="display:none;">
-<h2>👶 Pediatrics</h2>
-<p>Add your content</p>
-</section>
+<div class="card">
+<h2>🔔 Reminder</h2>
+<button onclick="enableReminder()">Enable</button>
+</div>
+</div>
 
-<section id="obs" class="subject-section" style="display:none;">
-<h2>🤰 Obstetrics</h2>
-<p>Add your content</p>
-</section>
-
-<section id="mental" class="subject-section" style="display:none;">
-<h2>🧠 Mental Health</h2>
-<p>Add your content</p>
-</section>
-
-<section>
-<h2>📊 Study Tracker</h2>
-<input id="subject" placeholder="Subject">
-<input id="hours" type="number" placeholder="Hours">
-<button onclick="addStudy()">Add</button>
-
-<table id="studyTable">
-<tr><th>Subject</th><th>Hours</th></tr>
-</table>
-</section>
-
-<section>
-<h2>📅 Daily Planner</h2>
-<input id="task" placeholder="Task">
-<button onclick="addTask()">Add</button>
-<ul id="taskList"></ul>
-</section>
-
-<section>
-<h2>🧠 Topics</h2>
-<input id="topic" placeholder="Topic">
-<button onclick="addTopic()">Add</button>
-<ul id="topicList"></ul>
-</section>
-
-<section>
-<h2>📝 Notes</h2>
-<textarea id="notes"></textarea><br>
-<button onclick="saveNotes()">Save</button>
-</section>
-
-<section>
-<h2>📊 Progress</h2>
-<canvas id="chart"></canvas>
-</section>
-
-<footer style="text-align:center; padding:10px; background:#0d47a1; color:white;">
-© 2026 NursingPreparation
-</footer>
+</div>
 
 <script>
-function showSection(id){
-  document.querySelectorAll(".subject-section").forEach(s=>s.style.display="none");
+
+function show(id){
+  document.querySelectorAll(".section").forEach(s=>s.style.display="none");
   document.getElementById(id).style.display="block";
 }
 
-let studyData = JSON.parse(localStorage.getItem("studyData")) || [];
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-let topics = JSON.parse(localStorage.getItem("topics")) || [];
-document.getElementById("notes").value = localStorage.getItem("notes") || "";
+let subjects=["Medical","Fundamentals","Pediatrics","Obstetrics","Mental","Pharma"];
 
-function addStudy(){
-  studyData.push({subject:subject.value, hours:hours.value});
-  localStorage.setItem("studyData",JSON.stringify(studyData));
-  renderStudy(); updateChart();
+function renderSubjects(){
+  let c=document.getElementById("subjectProgress");
+  c.innerHTML="";
+  subjects.forEach(s=>{
+    let checked=localStorage.getItem(s)=="true";
+    c.innerHTML+=`<label><input type="checkbox" ${checked?"checked":""} onchange="saveSub('${s}',this.checked)"> ${s}</label><br>`;
+  });
+  updatePercent();
 }
 
-function renderStudy(){
-  let table=document.getElementById("studyTable");
-  table.innerHTML="<tr><th>Subject</th><th>Hours</th></tr>";
-  studyData.forEach(s=>{
-    let row=table.insertRow();
-    row.insertCell(0).innerHTML=s.subject;
-    row.insertCell(1).innerHTML=s.hours;
+function saveSub(s,v){
+  localStorage.setItem(s,v);
+  updatePercent();
+}
+
+function updatePercent(){
+  let done=0;
+  subjects.forEach(s=>{ if(localStorage.getItem(s)=="true") done++; });
+  let p=Math.round((done/subjects.length)*100);
+  subPercent.innerText=p+"% completed";
+}
+
+let questions=[
+{q:"Pulse?",opt:["60-100","120-150"],ans:0},
+{q:"BP?",opt:["120/80","150/100"],ans:0}
+];
+
+let i=0,score=0,time=60;
+
+function startMock(){
+  i=0;score=0;time=60;
+  nextQ(); runTimer();
+}
+
+function nextQ(){
+  let q=questions[i];
+  let html="<p>"+q.q+"</p>";
+  q.opt.forEach((o,idx)=>{
+    html+=`<button onclick="ans(${idx})">${o}</button>`;
+  });
+  mockBox.innerHTML=html;
+}
+
+function ans(x){
+  if(x==questions[i].ans) score++;
+  i++;
+  if(i<questions.length) nextQ();
+  else mockBox.innerHTML="Score: "+score;
+}
+
+function runTimer(){
+  let t=setInterval(()=>{
+    timer.innerText=time+" sec";
+    time--;
+    if(time<0){ clearInterval(t); mockBox.innerHTML="Time up"; }
+  },1000);
+}
+
+let vids=JSON.parse(localStorage.getItem("vids"))||[];
+
+function addVideo(){
+  let l=videoInput.value.replace("watch?v=","embed/");
+  vids.push(l);
+  localStorage.setItem("vids",JSON.stringify(vids));
+  showVideos();
+}
+
+function showVideos(){
+  videoList.innerHTML="";
+  vids.forEach(v=>{
+    videoList.innerHTML+=`<iframe width=300 height=200 src="${v}"></iframe>`;
   });
 }
 
-function addTask(){
-  tasks.push(task.value);
-  localStorage.setItem("tasks",JSON.stringify(tasks));
-  renderTasks();
+function updateStreak(){
+  let today=new Date().toDateString();
+  let last=localStorage.getItem("last");
+  let st=parseInt(localStorage.getItem("streak")||0);
+  if(last!=today){
+    st++; localStorage.setItem("streak",st);
+    localStorage.setItem("last",today);
+  }
+  streak.innerText="🔥 "+st;
 }
 
-function renderTasks(){
-  taskList.innerHTML="";
-  tasks.forEach(t=>{
-    let li=document.createElement("li");
-    li.innerText=t;
-    taskList.appendChild(li);
+function enableReminder(){
+  Notification.requestPermission().then(p=>{
+    if(p=="granted"){
+      setInterval(()=>{ new Notification("Study Reminder"); },3600000);
+    }
   });
 }
 
-function addTopic(){
-  topics.push(topic.value);
-  localStorage.setItem("topics",JSON.stringify(topics));
-  renderTopics();
-}
+renderSubjects();
+showVideos();
+updateStreak();
 
-function renderTopics(){
-  topicList.innerHTML="";
-  topics.forEach(t=>{
-    let li=document.createElement("li");
-    li.innerHTML=`<input type="checkbox"> ${t}`;
-    topicList.appendChild(li);
-  });
-}
-
-function saveNotes(){
-  localStorage.setItem("notes",notes.value);
-}
-
-let chart;
-function updateChart(){
-  let labels=studyData.map(s=>s.subject);
-  let data=studyData.map(s=>s.hours);
-
-  if(chart) chart.destroy();
-
-  chart=new Chart(document.getElementById("chart"),{
-    type:'bar',
-    data:{labels:labels,datasets:[{label:'Hours',data:data}]}
-  });
-}
-
-renderStudy(); renderTasks(); renderTopics(); updateChart();
 </script>
 
 </body>
